@@ -11,13 +11,13 @@ const BestSeller = () => {
     const bestProduct = products.filter((item) => item.bestseller);
     setBestSeller(bestProduct.slice(0, 5));
   }, [products]);
+  
   return (
     <div className="my-10">
       <div className="text-center text-3xl py-8">
-        <Title text1={"BEST"} text2={"SELLER"} />
+        <Title text1={"SẢN PHẨM"} text2={"BÁN CHẠY NHẤT"} />
         <p className="w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600">
-          Our best seller products are the most popular and highly rated
-          products in our store.
+          Những sản phẩm bán chạy nhất của chúng tôi là những sản phẩm phổ biến và được đánh giá cao nhất trong cửa hàng.
         </p>
       </div>
 

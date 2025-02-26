@@ -8,34 +8,31 @@ const Footer = () => {
         <div>
           <img src={assets.logo} className="mb-5 w-32" />
           <p className="w-full md:w-2/3 text-gray-600">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores
-            deserunt voluptates saepe voluptatibus similique earum autem modi
-            tenetur tempora? Soluta quo, commodi corporis dolorum minus a iure
-            illum modi adipisci?
+            Chúng tôi cam kết mang đến những sản phẩm chất lượng nhất cho bạn.
+            Luôn đổi mới, sáng tạo và phục vụ tận tâm để bạn có trải nghiệm mua sắm tốt nhất.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-medium mb-5">Quick Links</h3>
+          <h3 className="text-xl font-medium mb-5">Liên kết nhanh</h3>
           <ul className="flex flex-col gap-1 text-gray-600">
-            <li>Home </li>
-            <li>About us</li>
-            <li>Delivery</li>
-            <li>Privacy policy</li>
+            <li>Trang chủ</li>
+            <li>Về chúng tôi</li>
+            <li>Giao hàng</li>
+            <li>Chính sách bảo mật</li>
           </ul>
         </div>
         <div>
-          <h3 className="text-xl font-medium mb-5">GET IN TOUCH</h3>
+          <h3 className="text-xl font-medium mb-5">LIÊN HỆ</h3>
           <ul className="flex flex-col gap-1 text-gray-600">
-            <li>Phone: +1 123 456 7890</li>
-            <li>contact@foreveryou.com</li>
+            <li>Điện thoại: +1 123 456 7890</li>
+            <li>Email: contact@foreveryou.com</li>
           </ul>
         </div>
-    
       </div>
       <div>
-            <hr/>
-            <p className="py-5 text-sm text-center">Copyright 2024@forever.com - All Right Reserved</p>
-        </div>
+        <hr />
+        <p className="py-5 text-sm text-center">Bản quyền 2024@forever.com - Mọi quyền được bảo lưu</p>
+      </div>
     </div>
   );
 };

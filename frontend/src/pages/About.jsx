@@ -1,49 +1,48 @@
 import React from "react";
 import Title from "../components/Title";
 import { assets } from "../assets/frontend_assets/assets";
-import NewsletterBox from '../components/NewsletterBox'
-
+import NewsletterBox from '../components/NewsletterBox';
 
 const About = () => {
   return (
     <div>
       <div className="text-2xl text-center pt-8 border-t">
-        <Title text1={"ABOUT"} text2={"US"} />
+        <Title text1={"VỀ"} text2={"CHÚNG TÔI"} />
       </div>
       <div className="my-10 flex flex-col md:flex-row gap-16">
         <img
           className="w-full md:max-w-[450px]"
           src={assets.about_img}
-          alt=""
+          alt="Giới thiệu về chúng tôi"
         />
         <div className="flex flex-col justify-center gap-6 md:w-2/4 text-gray-600">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-            aspernatur quaerat et.
+            Chúng tôi cam kết mang đến những sản phẩm chất lượng cao và trải nghiệm mua sắm tốt nhất cho khách hàng.
           </p>
-          <p>consectetur maiores quo perferendis sunt,
-            pariatur reprehenderit, impedit delectus quisquam? Voluptate ex,
-            quae totam inventore corporis voluptatibus atque.
+          <p>
+            Với đội ngũ chuyên nghiệp, chúng tôi luôn cố gắng nâng cao chất lượng dịch vụ để đáp ứng mọi nhu cầu của bạn.
           </p>
-          <b className="text-gray-800">Our Mission</b>
-          <p>The createRoot method was introduced in React 18. If you're using an older version of React, you won't have access to this method. You can check your React version in the package.json file</p>
+          <b className="text-gray-800">Sứ mệnh của chúng tôi</b>
+          <p>
+            Chúng tôi hướng đến việc cung cấp những sản phẩm và dịch vụ tốt nhất, đảm bảo sự hài lòng tuyệt đối từ khách hàng.
+          </p>
         </div>
       </div>
       <div className="text-xl py-4">
-        <Title text1={'WHY'} text2={'CHOOSE US'}/>
+        <Title text1={"TẠI SAO"} text2={"CHỌN CHÚNG TÔI"} />
       </div>
       <div className="flex flex-col md:flex-row text-sm mb-20">
         <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Quality Assurance</b>
-          <p className="text-gray-600">We meticulously and vet each product to ensure it meets our stringent</p>
+          <b>Đảm bảo chất lượng</b>
+          <p className="text-gray-600">Chúng tôi kiểm tra kỹ lưỡng từng sản phẩm để đảm bảo chất lượng tốt nhất.</p>
         </div>
         <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Convenience</b>
-          <p className="text-gray-600">We meticulously and vet each product to ensure it meets our stringent</p>
+          <b>Tiện lợi</b>
+          <p className="text-gray-600">Trải nghiệm mua sắm dễ dàng, nhanh chóng với dịch vụ tận tâm.</p>
         </div>
         <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Exceptional Customer</b>
-          <p className="text-gray-600">We meticulously and vet each product to ensure it meets our stringent</p>
+          <b>Dịch vụ khách hàng tuyệt vời</b>
+          <p className="text-gray-600">Chúng tôi luôn lắng nghe và hỗ trợ khách hàng một cách tận tình.</p>
         </div>
       </div>
       <NewsletterBox />
