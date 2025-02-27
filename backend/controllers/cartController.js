@@ -84,58 +84,70 @@ const updateCart = async (req, res) => {
 // 📦 Lấy giỏ hàng của người dùng
 const getUserCart = async (req, res) => {
     try {
-      const { userId } = req.params;
-  
-      // Kiểm tra userId hợp lệ
-      if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(400).json({ success: false, message: "userId không hợp lệ!" });
-      }
-  
-      const cart = await Cart.findOne({ userId }).populate("items.itemId");
-  
-      // Nếu không có giỏ hàng, trả về giỏ hàng rỗng
-      if (!cart) {
-        return res.status(200).json({ success: true, cartData: [] });
-      }
-  
-      // Tạo một mảng để chứa dữ liệu giỏ hàng đã cập nhật
-      let newCartData = [];
-  
-      for (let item of cart.items) {
-        
-  
-        // Tìm thông tin sản phẩm từ model Product
-        const productData = await productModel.findOne({ _id: item.itemId });
-  
-        if (productData) {
-          // Kết hợp dữ liệu giỏ hàng với dữ liệu sản phẩm
-          newCartData.push({
-            _id: productData._id,
-            name: productData.name,
-            description: productData.description,
-            price: productData.price,
-            image: productData.image,
-            category: productData.category,
-            subCategory: productData.subCategory,
-            sizes: productData.sizes,
-            bestseller: productData.bestseller,
-            date: productData.date,
-            quantity: item.quantity,
-            size: item.size, 
-          });
-        } else {
-          console.log(`Product not found for itemId: ${item.itemId}`);
+        const { userId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "userId không hợp lệ!" });
         }
-      }
-  
-      // Trả về dữ liệu giỏ hàng đã cập nhật
-      res.json({ success: true, cartData: newCartData });
-  
+
+        const cart = await Cart.findOne({ userId }).populate("items.itemId");
+
+        if (!cart) {
+            return res.status(200).json({ success: true, cartData: [] });
+        }
+
+        let newCartData = [];
+
+        for (let item of cart.items) {
+            const productData = await productModel.findOne({ _id: item.itemId });
+
+            if (productData) {
+                newCartData.push({
+                    _id: productData._id,
+                    name: productData.name,
+                    description: productData.description,
+                    price: productData.price,
+                    image: productData.image,
+                    category: productData.category,
+                    subCategory: productData.subCategory,
+                    sizes: productData.sizes,
+                    bestseller: productData.bestseller,
+                    date: productData.date,
+                    quantity: item.quantity,
+                    size: item.size,
+                });
+            }
+        }
+
+        res.json({ success: true, cartData: newCartData });
+
     } catch (error) {
-      console.error("🔥 Lỗi khi lấy giỏ hàng:", error);
-      res.status(500).json({ success: false, message: "Lỗi khi lấy giỏ hàng!", error });
+        console.error("🔥 Lỗi khi lấy giỏ hàng:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi lấy giỏ hàng!", error });
     }
-  };
+};
+
+  // ❌ Xóa toàn bộ giỏ hàng của người dùng
+const clearCart = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "ID người dùng không hợp lệ!" });
+        }
+
+        const cart = await Cart.findOneAndDelete({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ success: false, message: "Không tìm thấy giỏ hàng!" });
+        }
+
+        res.json({ success: true, message: "Giỏ hàng đã được xóa!" });
+
+    } catch (error) {
+        console.error("🔥 Lỗi khi xóa giỏ hàng:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi xóa giỏ hàng!", error });
+    }
+};
   
-  
-export { addToCart, updateCart, getUserCart };
+export { addToCart, updateCart, getUserCart, clearCart };

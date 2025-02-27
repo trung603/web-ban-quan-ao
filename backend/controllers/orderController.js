@@ -1,5 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import cartModel from "../models/cartModel.js";
 import Stripe from "stripe";
 import mongoose from "mongoose";
 
@@ -13,32 +14,35 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Đặt hàng bằng phương thức Thanh toán khi nhận hàng (COD)
 const placeOrder = async (req, res) => {
     try {
-        
         const { userId, items, amount, address } = req.body;
-console.log('Key >>>',process.env.STRIPE_SECRET_KEY);
-        // Tạo dữ liệu đơn hàng
+
+        // Kiểm tra userId hợp lệ
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "ID không hợp lệ!" });
+        }
+
+        // 📌 Tạo đơn hàng mới
         const orderData = {
             userId,
             items,
             address,
             amount,
-            paymentMethod: "COD", // Phương thức thanh toán: Thanh toán khi nhận hàng
-            payment: false, // Chưa thanh toán
-            status: "Order Placed", // Trạng thái ban đầu
-            date: Date.now(), // Ngày đặt hàng
+            paymentMethod: "COD",
+            payment: false,
+            status: "Order Placed",
+            date: Date.now(),
         };
 
-        // Lưu đơn hàng vào database
         const newOrder = new orderModel(orderData);
         await newOrder.save();
 
-        // Xóa giỏ hàng của người dùng sau khi đặt hàng thành công
-        await userModel.findByIdAndUpdate(userId, { cartData: {} });
+        // ✅ Xóa giỏ hàng của user sau khi đặt hàng thành công
+        await cartModel.findOneAndDelete({ userId });
 
-        res.json({ success: true, message: "Đơn hàng đã được đặt thành công" });
+        res.json({ success: true, message: "Đơn hàng đã được đặt thành công!" });
     } catch (error) {
-        console.error("Lỗi khi đặt hàng:", error);
-        res.status(500).json({ success: false, message: "Lỗi hệ thống" });
+        console.error("🔥 Lỗi khi đặt hàng COD:", error);
+        res.status(500).json({ success: false, message: "Lỗi hệ thống!" });
     }
 };
 
@@ -116,7 +120,7 @@ const verifyStripe = async (req, res) => {
 
         if (success === "true") {
             await orderModel.findByIdAndUpdate(orderId, { payment: true });
-            await userModel.findByIdAndUpdate(userId, { cartData: [] });
+            await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
             res.json({ success: true, message: "Thanh toán thành công!" });
         } else {
@@ -147,6 +151,7 @@ const userOrders = async (req, res) => {
         const { userId } = req.params;
 
         const orders = await orderModel.find({ userId });
+        
         res.json({ success: true, orders });
     } catch (error) {
         console.error("Lỗi khi lấy đơn hàng người dùng:", error);

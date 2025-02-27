@@ -10,10 +10,10 @@ const Orders = () => {
 
   const statusMapping = {
     "Order Placed": "📦 Đơn hàng đã đặt",
-    Packing: "📦 Đang đóng gói",
-    Shipped: "🚚 Đang vận chuyển",
+    "Packing": "📦 Đang đóng gói",
+    "Shipped": "🚚 Đang vận chuyển",
     "Out for delivery": "🚀 Đang giao hàng",
-    Delivered: "✅ Đã giao",
+    "Delivered": "✅ Đã giao",
   };
 
   const loadOrderData = async () => {
@@ -32,6 +32,7 @@ const Orders = () => {
 
         response.data.orders.forEach((order) => {
           order.items.forEach((item) => {
+            console.log("🛒 Item từ API:", item);
             allOrdersItem.push({
               ...item,
               image: item.image || [],
@@ -39,8 +40,8 @@ const Orders = () => {
               status: order.status,
               paymentMethod: order.paymentMethod,
               date: order.date,
-              quantity: order.quantity,
-              size: order.size
+              quantity: item.quantity, 
+            size: item.size,
             });
           });
         });

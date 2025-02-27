@@ -110,6 +110,7 @@ for (const productId in cartItems) {
       toast.error(error.message);
     }
   };
+  
   return (
     <form
       onSubmit={onSubmitHandler}
