@@ -44,33 +44,41 @@ const Profile = () => {
   };
 
   const handleReferralCodeSubmit = async () => {
-  if (!referralCode) {
-    setMessage("Vui lòng nhập mã giới thiệu!");
-    return;
-  }
-  try {
-    const response = await axios.post(
-      "http://localhost:4000/api/user/redeem-referral",
-      { referralCode },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    if (response.data.success) {
-      setMessage(`Mã hợp lệ! Bạn nhận ${response.data.points} điểm.`);
-      
-      // Fetch lại thông tin user từ API để đảm bảo dữ liệu chính xác
-      const profileRes = await axios.get("http://localhost:4000/api/user/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(profileRes.data.user);
-    } else {
-      setMessage("Mã không hợp lệ.");
+    if (!referralCode) {
+      setMessage("Vui lòng nhập mã giới thiệu!");
+      return;
     }
-  } catch (error) {
-    console.error("Lỗi gửi mã giới thiệu:", error);
-    setMessage("Bạn đã sử dụng mã giới thiệu trước đó.");
-  }
-};
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/redeem-referral",
+        { referralCode },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      if (response.data.success) {
+        setMessage(`✅ Mã hợp lệ! Bạn nhận ${response.data.points} điểm.`);
+        
+        // Cập nhật lại thông tin user
+        const profileRes = await axios.get("http://localhost:4000/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(profileRes.data.user);
+      }
+    } catch (error) {
+      console.error("❌ Lỗi gửi mã giới thiệu:", error.response?.data || error);
+  
+      // Hiển thị thông báo lỗi
+      setMessage(error.response?.data?.message || "Có lỗi xảy ra.");
+  
+      // Nếu lỗi do đã dùng mã, ẩn ô nhập mã
+      if (error.response?.data?.message === "Bạn đã sử dụng mã giới thiệu trước đó.") {
+        setReferralCode(""); // Xóa input để tránh nhập lại
+      }
+    }
+  };
+  
+  
 
 // upload ảnh
 const handleAvatarUpload = async (event) => {
@@ -113,7 +121,7 @@ const handleAvatarUpload = async (event) => {
       alt="Avatar"
       className="w-28 h-28 rounded-full border-4 border-blue-400 object-cover shadow-md"
     />
-    <p>{user.name}</p>
+    <p className="text-center">{user.name}</p>
   </label>
   <input
     type="file"

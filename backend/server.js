@@ -11,6 +11,8 @@ import orderRouter from "./routes/orderRoute.js";
 import newsletterRouter from "./routes/newsletterRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import commentrouter from "./routes/commentRoute.js";
+import adminRoutes from './routes/adminRoute.js'
+import referralRouter from "./routes/referralRoute.js";
 
 
 //app config
@@ -34,7 +36,10 @@ app.use('/api/order', orderRouter)
 
 app.use("/api/newsletter", newsletterRouter); 
 app.use("/api/customer", customerRoutes)
-app.use("/api/comments", commentrouter)
+// app.use("/api/comments", commentrouter)
+
+app.use("/api/user", adminRoutes);
+app.use("/api/redeem-referral", referralRouter)
 
 
 app.get("/", (req, res) => {

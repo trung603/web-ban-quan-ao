@@ -10,11 +10,13 @@ import {
 import upload from "../middleware/uploads.js";
 import { forgotPassword, resetPassword} from "../controllers/authController.js";
 
+
 const userRouter = express.Router();
 
 userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
 userRouter.post("/admin", adminLogin);
+
 userRouter.get("/profile", getUserProfile);
 // Thêm route xử lý mã giới thiệu
 userRouter.post("/redeem-referral", redeemReferral);

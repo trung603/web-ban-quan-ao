@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import AdminDashboard from "./pages/AdminDashboard"; // Import trang admin
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminUserList from "./pages/AdminUserList";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = '$';
@@ -37,6 +38,7 @@ const App = () => {
                 <Route path="/list" element={<List token={token} />} />
                 <Route path="/order" element={<Order token={token} />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard token={token} />} /> 
+                <Route path="/adminuser" element={ <AdminUserList token={token}/>}/>
               </Routes>
             </div>
           </div>
