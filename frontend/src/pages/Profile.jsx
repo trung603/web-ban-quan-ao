@@ -19,6 +19,7 @@ const Profile = () => {
     }
     const fetchUserProfile = async () => {
       try {
+        
         const userId = localStorage.getItem("userId"); // Lưu userId sau khi đăng nhập
         if (!userId) {
           navigate("/login");
@@ -51,7 +52,7 @@ const Profile = () => {
   
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/redeem-referral",
+        "http://localhost:4000/api/refe/redeem-referral",
         { referralCode },
         { headers: { Authorization: `Bearer ${token}` } }
       );

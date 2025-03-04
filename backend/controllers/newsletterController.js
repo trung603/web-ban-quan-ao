@@ -24,5 +24,14 @@ const subscribeNewsletter = async (req, res) => {
         return res.status(500).json({ success: false, message: "Có lỗi xảy ra, vui lòng thử lại sau!" });
     }
 };
-
-export {subscribeNewsletter};
+// lấy thông tin khách
+const getNewsletterSubscribers = async (req, res) => {
+    try {
+        const subscribers = await Newsletter.find({}, "email createdAt"); // Chỉ lấy email và ngày tạo
+        return res.status(200).json(subscribers);
+    } catch (error) {
+        console.error("Lỗi khi lấy danh sách email:", error);
+        return res.status(500).json({ success: false, message: "Không thể lấy danh sách email!" });
+    }
+};
+export {subscribeNewsletter, getNewsletterSubscribers};

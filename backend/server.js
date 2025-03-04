@@ -15,6 +15,7 @@ import adminRoutes from './routes/adminRoute.js'
 import referralRouter from "./routes/referralRoute.js";
 
 
+
 //app config
 const app = express();
 const port = process.env.PORT || 4000;
@@ -39,8 +40,8 @@ app.use("/api/customer", customerRoutes)
 // app.use("/api/comments", commentrouter)
 
 app.use("/api/user", adminRoutes);
-app.use("/api/redeem-referral", referralRouter)
 
+app.use("/api/refe", referralRouter)
 
 app.get("/", (req, res) => {
   res.send("API Working");

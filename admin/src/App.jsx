@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/SIdebar";
+ import Sidebar from "./components/Sidebar";
 import { Route, Routes } from "react-router-dom";
 import Add from "./pages/Add";
 import List from "./pages/List";
@@ -10,6 +10,7 @@ import AdminDashboard from "./pages/AdminDashboard"; // Import trang admin
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminUserList from "./pages/AdminUserList";
+import NewsletterList from "./pages/Newsletter";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = '$';
@@ -39,6 +40,7 @@ const App = () => {
                 <Route path="/order" element={<Order token={token} />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard token={token} />} /> 
                 <Route path="/adminuser" element={ <AdminUserList token={token}/>}/>
+                <Route path="/newsletter" element={ <NewsletterList token={token}/>}/>
               </Routes>
             </div>
           </div>

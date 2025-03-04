@@ -2,6 +2,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
+import referralModel from "../models/referralModel.js";
 
 import mongoose from "mongoose";
 // Tạo token JWT dựa trên ID người dùng
@@ -65,10 +66,12 @@ const registerUser = async (req, res) => {
           referralCode,
         });
       }
+      
     }
 
     // Lưu người dùng mới vào database
     const user = await newUser.save();
+    console.log("📌 Người dùng mới đã được tạo:", user);
 
     // Tạo token JWT
     const token = createToken(user._id);
@@ -86,58 +89,68 @@ const registerUser = async (req, res) => {
   }
 };
 
-const User = require("../models/User");
-
-// // Hàm xử lý logic nhập mã giới thiệu
+// // // Hàm xử lý logic nhập mã giới thiệu
 // const redeemReferral = async (req, res) => {
 //   try {
+//     console.log("🔹 Dữ liệu nhận từ frontend:", req.body);
+//     console.log("🆔 User ID:", req.user);
 //       const { referralCode } = req.body;
-//       const userId = req.user.id;
+//       const userId = req.user.id; // ID của người nhập mã
+
+//       console.log("🆔 User ID:", userId);
+//         console.log("🎟️ Referral Code:", referralCode);
 
 //       if (!referralCode) {
 //           return res.status(400).json({ success: false, message: "Mã giới thiệu không được để trống." });
 //       }
 
-//       // Tìm user hiện tại
-//       const user = await User.findById(userId);
-//       if (!user) {
-//           return res.status(404).json({ success: false, message: "Người dùng không tồn tại." });
-//       }
-
-//       console.log("🔹 DEBUG - User hiện tại:", user.email);
-//       console.log("🔹 DEBUG - Mã nhập:", referralCode);
-//       console.log("🔹 DEBUG - Danh sách usedReferralCodes:", user.usedReferralCodes);
-
-//       // Kiểm tra nếu mã đã được sử dụng trước đó
-//       if (user.usedReferralCodes.some(code => code === referralCode)) {
-//           console.log("⚠️ Mã đã được sử dụng trước đó:", referralCode);
-//           return res.status(400).json({ success: false, message: "Bạn đã nhập mã này trước đó." });
-//       }
-
-//       // Tìm user sở hữu mã giới thiệu
-//       const referrer = await User.findOne({ referralCode });
-//       if (!referrer) {
-//           console.log("❌ Mã không hợp lệ:", referralCode);
+//       // Kiểm tra xem mã có tồn tại trong Referral không
+//       const referralEntry = await referralModel.findOne({ referralCode }).populate("referrerId");
+//       if (!referralEntry) {
 //           return res.status(400).json({ success: false, message: "Mã giới thiệu không hợp lệ." });
 //       }
 
+//       // Lấy người giới thiệu
+//       const referrer = referralEntry.referrerId;
+//       if (!referrer) {
+//           return res.status(400).json({ success: false, message: "Không tìm thấy người giới thiệu." });
+//       }
+
+//       // Kiểm tra nếu người dùng đã nhập mã trước đó
+//       const existingRedemption = await referralModel.findOne({
+//           referredUserId: userId,
+//       });
+
+//       if (existingRedemption) {
+//           return res.status(400).json({ success: false, message: "Bạn đã nhập mã giới thiệu trước đó." });
+//       }
+
 //       // Không cho phép nhập mã của chính mình
-//       if (referrer._id.equals(user._id)) {
+//       if (referrer._id.equals(userId)) {
 //           return res.status(400).json({ success: false, message: "Bạn không thể nhập mã của chính mình." });
 //       }
 
 //       // Cộng điểm cho cả hai người
+//       const user = await userModel.findById(userId);
+//       if (!user) {
+//           return res.status(404).json({ success: false, message: "Người dùng không tồn tại." });
+//       }
+
 //       user.points += 10;
 //       referrer.points += 20;
 
-//       // Lưu mã vào danh sách đã nhập
-//       user.usedReferralCodes.push(referralCode);
-
-//       // Lưu lại dữ liệu
+//       // Lưu dữ liệu
 //       await user.save();
 //       await referrer.save();
 
-//       console.log("✅ Mã hợp lệ! Điểm hiện tại của user:", user.points);
+//       // Lưu lịch sử mã giới thiệu đã nhập
+//       const newReferral = new Referral({
+//           referrerId: referrer._id,
+//           referredUserId: userId,
+//           referralCode,
+//       });
+//       await newReferral.save();
+
 //       return res.json({ success: true, message: "Mã hợp lệ!", points: user.points });
 
 //   } catch (error) {

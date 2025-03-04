@@ -4,11 +4,12 @@ import {
   registerUser,
   adminLogin,
   getUserProfile,
-  redeemReferral,
+
   updateAvatar,
 } from "../controllers/userController.js";
 import upload from "../middleware/uploads.js";
 import { forgotPassword, resetPassword} from "../controllers/authController.js";
+import referralToken from "../middleware/referralAuth.js";
 
 
 const userRouter = express.Router();
@@ -18,8 +19,8 @@ userRouter.post("/login", loginUser);
 userRouter.post("/admin", adminLogin);
 
 userRouter.get("/profile", getUserProfile);
-// Thêm route xử lý mã giới thiệu
-userRouter.post("/redeem-referral", redeemReferral);
+// // Thêm route xử lý mã giới thiệu
+// userRouter.post("/redeem-referral",referralToken, redeemReferral);
 // Route upload ảnh
 userRouter.post("/update-avatar", upload.single("avatar"), updateAvatar);
 
