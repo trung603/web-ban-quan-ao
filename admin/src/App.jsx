@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminUserList from "./pages/AdminUserList";
 import NewsletterList from "./pages/Newsletter";
+import AdminComments from "./pages/AdminComment";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = '$';
@@ -19,7 +20,9 @@ const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
 
   useEffect(() => {
-    localStorage.setItem('token', token);
+    if (token) {
+    localStorage.setItem("token", token); // Đảm bảo luôn lưu token mới nhất
+  }
   }, [token]);
 
   return (
@@ -35,12 +38,13 @@ const App = () => {
             <Sidebar token={token} /> {/* Truyền token vào Sidebar */}
             <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
               <Routes>
+                <Route path="/admin/dashboard" element={<AdminDashboard token={token} />} /> 
                 <Route path="/add" element={<Add token={token} />} />
                 <Route path="/list" element={<List token={token} />} />
                 <Route path="/order" element={<Order token={token} />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard token={token} />} /> 
                 <Route path="/adminuser" element={ <AdminUserList token={token}/>}/>
                 <Route path="/newsletter" element={ <NewsletterList token={token}/>}/>
+                <Route path="/admincomment" element={ <AdminComments token={token}/>}/>
               </Routes>
             </div>
           </div>

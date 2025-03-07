@@ -1,52 +1,85 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { assets } from '../assets/admin_assets/assets';
-import axios from 'axios';
-import { backendUrl } from '../App';
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  FaBox,
+  FaUsers,
+  FaShoppingCart,
+  FaComment,
+  FaRegListAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import axios from "axios";
+import { backendUrl } from "../App";
 
 const Sidebar = ({ token }) => {
   const [admin, setAdmin] = useState({ name: "Admin", avatar: "" });
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   return (
-    <div className="w-[18%] min-h-screen border-r-2 flex flex-col">
-      <div 
-        className="flex flex-col items-center gap-2 py-6 border-b cursor-pointer hover:bg-gray-100"
+    <div className="w-[18%] min-h-screen bg-gray-900 text-white flex flex-col ">
+      {/* Avatar & Admin Info */}
+      <div
+        className="flex flex-col items-center gap-2 py-6 border-b border-gray-700 cursor-pointer hover:bg-gray-800"
         onClick={() => navigate("/admin/dashboard")}
       >
         <img
-          src={admin.avatar || "https://www.shutterstock.com/image-vector/man-inscription-admin-icon-outline-600nw-1730974153.jpg"}
+          src={
+            admin.avatar ||
+            "https://www.shutterstock.com/image-vector/man-inscription-admin-icon-outline-600nw-1730974153.jpg"
+          }
           alt="Admin Avatar"
-          className="w-14 h-14 rounded-full border border-gray-300"
+          className="w-14 h-14 rounded-full border border-gray-500"
         />
-        <p className="font-semibold text-gray-700">{admin.name}</p>
-        <p>Chào mừng bạn đã quay trở lại !</p>
+        <p className="font-semibold">{admin.name}</p>
+        <p className="text-sm text-gray-400">Chào mừng bạn trở lại!</p>
       </div>
 
-      <div className="flex flex-col gap-4 pt-6 pl-[20%] text-[15px]">
-        <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to="/add">
-          <img className="w-5 h-5" src={assets.add_icon} alt="" />
-          <p className="hidden md:block">Thêm sản phẩm</p>
-        </NavLink>
-        <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to="/list">
-          <img className="w-5 h-5" src={assets.order_icon} alt="" />
-          <p className="hidden md:block">Danh sách sản phẩm</p>
-        </NavLink>
-        <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to="/order">
-          <img className="w-5 h-5" src={assets.order_icon} alt="" />
-          <p className="hidden md:block">Danh sách đơn hàng</p>
-        </NavLink>
-        <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to="/adminuser">
-          <img className="w-5 h-5" src={assets.order_icon} alt="" />
-          <p className="hidden md:block">Danh sách người dùng</p>
-        </NavLink>
-        <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to="/newsletter">
-          <img className="w-5 h-5" src={assets.order_icon} alt="" />
-          <p className="hidden md:block">Danh sách người dùng</p>
-        </NavLink>
+      {/* Danh sách menu */}
+      <div className="flex flex-col gap-2 pt-4 px-4">
+        <SidebarItem to="/add" icon={<FaBox />} text="Thêm sản phẩm" />
+        <SidebarItem
+          to="/list"
+          icon={<FaRegListAlt />}
+          text="Danh sách sản phẩm"
+        />
+        <SidebarItem
+          to="/order"
+          icon={<FaShoppingCart />}
+          text="Danh sách đơn hàng"
+        />
+        <SidebarItem
+          to="/adminuser"
+          icon={<FaUsers />}
+          text="Danh sách người dùng"
+        />
+        <SidebarItem
+          to="/newsletter"
+          icon={<FaUsers />}
+          text="Khách vãng lai"
+        />
+        <SidebarItem
+          to="/admincomment"
+          icon={<FaComment />}
+          text="Danh sách bình luận"
+        />
       </div>
+
     </div>
   );
 };
+
+const SidebarItem = ({ to, icon, text }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex items-center gap-3 p-3 rounded-lg transition ${
+        isActive ? "bg-gray-700" : "hover:bg-gray-800"
+      }`
+    }
+  >
+    <span className="text-lg">{icon}</span>
+    <span>{text}</span>
+  </NavLink>
+);
 
 export default Sidebar;

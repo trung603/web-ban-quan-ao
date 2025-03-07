@@ -37,7 +37,7 @@ app.use('/api/order', orderRouter)
 
 app.use("/api/newsletter", newsletterRouter); 
 app.use("/api/customer", customerRoutes)
-// app.use("/api/comments", commentrouter)
+app.use("/api/comments", commentrouter)
 
 app.use("/api/user", adminRoutes);
 

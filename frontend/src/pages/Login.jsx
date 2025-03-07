@@ -22,7 +22,7 @@ const Login = () => {
         });
 
         if (response.data.success) {
-          const { token, userId, referralCode } = response.data;
+          const { token, userId, referralCode, name } = response.data;
           setToken(token);
 
           // Lưu thông tin vào localStorage
@@ -30,6 +30,7 @@ const Login = () => {
           localStorage.setItem('userId', userId);
           localStorage.setItem('userEmail', email);
           localStorage.setItem('referralCode', referralCode);
+          localStorage.setItem("user", name);
 
           toast.success('Đăng ký thành công! 🎉');
           navigate('/'); // Điều hướng về trang chính
@@ -43,25 +44,29 @@ const Login = () => {
         });
 
         if (response.data.success) {
-          const { token, userId } = response.data;
+          const { token, userId, name } = response.data; // Lấy thêm name từ API
           setToken(token);
 
           // Lưu thông tin vào localStorage
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId);
           localStorage.setItem('userEmail', email);
-
+          localStorage.setItem("user", name); // ➜ Lưu tên vào localStorage
+          
+          console.log("Dữ liệu user từ localStorage:", localStorage.getItem("user"));
           toast.success('Đăng nhập thành công! 🚀');
           navigate('/');
         } else {
           toast.error(response.data.message);
         }
+        console.log("info",response.data);
       }
     } catch (error) {
       console.error('Lỗi:', error);
       toast.error('Đã xảy ra lỗi! Vui lòng thử lại.');
     }
-  };
+};
+
 
   useEffect(() => {
     if (token) {

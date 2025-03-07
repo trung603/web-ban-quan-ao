@@ -1,11 +1,14 @@
 import express from "express";
-import { addComment, getComments, likeComment, replyToComment } from "../controllers/commentController.js";
+import { addComment, getComments, likeComment, updateComment, deleteComment, getAllComments } from "../controllers/commentController.js";
 
-const commentRouter = express.Router();
+const commentrouter = express.Router();
 
-commentRouter.post("/:productId/add", addComment); // Thêm bình luận
-commentRouter.get("/:productId", getComments); // Lấy danh sách bình luận
-commentRouter.patch("/:commentId/like", likeComment); // Like bình luận
-commentRouter.post("/:commentId/reply", replyToComment); // Phản hồi bình luận
+commentrouter.post("/:productId", addComment);
 
-export default commentRouter;
+commentrouter.get("/getallcomment", getAllComments);
+commentrouter.get("/:productId", getComments);
+commentrouter.patch("/like/:commentId", likeComment);
+commentrouter.put("/:commentId", updateComment);
+commentrouter.delete("/:commentId", deleteComment); 
+
+export default commentrouter;

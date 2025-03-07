@@ -13,6 +13,7 @@ const Login = ({setToken}) => {
       const response = await axios.post(backendUrl + '/api/user/admin',{email,password})
       console.log(response);
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token); 
         setToken(response.data.token)
         toast.success('Đăng nhập thành công!');
       }else{
@@ -24,22 +25,53 @@ const Login = ({setToken}) => {
     }
   }
   return (
-    <div className='min-h-screen flex items-center justify-center w-full'>
-      <div className='bg-white shadow-md rounded-lg px-8 py-6 max-w-md'>
-        <h1 className='text-2xl font-bold mb-4'>Admin Panel</h1>
-        <form onSubmit={onSubmitHandler}>
-          <div className='mb-3 min-w-72'>
-            <p className='text-sm font-medium text-gray-700 mb-2'>Email Address</p>
-            <input onChange={(e)=>setEmail(e.target.value)} value={email} className='rounded-md w-full px-3 py-2 border border-gray-300 outline-none' type="email" placeholder='your@email.com' required />
-          </div>
-          <div className='mb-3 min-w-72'>
-            <p className='text-sm font-medium text-gray-700 mb-2'>Password</p>
-            <input onChange={(e)=>setPassword(e.target.value)} value={password}  className='rounded-md w-full px-3 py-2 border border-gray-300 outline-none' type="password" placeholder='Enter your password' required />
-          </div>
-          <button className='mt-2 w-full py-2 px-4 rounded-md text-white bg-black' type='submit'>Login</button>
-        </form>
+    <div className="min-h-screen flex items-center justify-center w-full bg-gray-100">
+  <div className="bg-white shadow-lg rounded-xl px-10 py-8 max-w-md w-full">
+    <h1 className="text-3xl font-semibold text-gray-800 text-center mb-6">
+      Admin Panel
+    </h1>
+    <form onSubmit={onSubmitHandler} className="space-y-5">
+      {/* Email Input */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Email Address
+        </label>
+        <input
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+          type="email"
+          placeholder="your@email.com"
+          required
+        />
       </div>
-    </div>
+
+      {/* Password Input */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Password
+        </label>
+        <input
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+          type="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+
+      {/* Login Button */}
+      <button
+        type="submit"
+        className="w-full py-3 rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition font-medium text-lg shadow-md"
+      >
+        Đăng nhập
+      </button>
+    </form>
+  </div>
+</div>
+
   )
 }
 

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/frontend_assets/assets";
+
 import RelatedProducts from "../components/RelatedProducts";
 import Comment from "../components/Comment";
 
@@ -123,7 +124,7 @@ const Product = () => {
           </p>
         </div>
       </div>
-      <Comment/>
+      <Comment productId={productId} />
       {/* -------------display related products------------- */}
       <RelatedProducts
         category={productData.category}
