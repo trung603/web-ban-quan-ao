@@ -125,6 +125,15 @@ const Collection = () => {
               />
               Đồ đôi
             </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                value={"kid"}
+                type="checkbox"
+                onChange={toggleCategory}
+              />
+              Trẻ con
+            </p>
           </div>
         </div>
         <div
@@ -150,7 +159,16 @@ const Collection = () => {
                 type="checkbox"
                 onChange={toggleSubCategory}
               />
-              Quần
+              Quần dài
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                value={"short"}
+                type="checkbox"
+                onChange={toggleSubCategory}
+              />
+              Quần ngắn
             </p>
             <p className="flex gap-2">
               <input
@@ -159,7 +177,43 @@ const Collection = () => {
                 type="checkbox"
                 onChange={toggleSubCategory}
               />
-              Đồ mùa đông
+              Áo khoác nam
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                value={"Winterwear"}
+                type="checkbox"
+                onChange={toggleSubCategory}
+              />
+              Áo khoác nữ
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                value={"sweater"}
+                type="checkbox"
+                onChange={toggleSubCategory}
+              />
+              Áo Sweater
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                value={"dress"}
+                type="checkbox"
+                onChange={toggleSubCategory}
+              />
+              Váy
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                value={"overalls"}
+                type="checkbox"
+                onChange={toggleSubCategory}
+              />
+              Váy yếm
             </p>
           </div>
         </div>
@@ -184,6 +238,10 @@ const Collection = () => {
               id={item._id}
               price={item.price}
               image={item.image}
+              stock={item.stock}       
+              
+              discount={item.discount}
+              showStock={true}
             />
           ))}
         </div>

@@ -147,8 +147,6 @@ const getProductInCart = async()=> {
     return totalAmount;
   };
   
-  
-
   // 📦 Lấy danh sách sản phẩm từ API
   const getProductsData = async () => {
     try {
@@ -174,7 +172,6 @@ const getProductInCart = async()=> {
       getProductInCart()
     }
   }, [token]);
-
 
   const logout = () => {
     setToken("");

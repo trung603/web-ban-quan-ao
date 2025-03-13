@@ -26,15 +26,18 @@ const Comments = ({ productId }) => {
       toast.error("❌ Nội dung bình luận không được để trống!");
       return;
     }
-
+  
     const userId = localStorage.getItem("userId");
-    const userName = localStorage.getItem("userName"); // Đổi thành userName thay vì user
-
+    const userName = localStorage.getItem("user");
+  
+    console.log("userId:", userId);
+    console.log("userName:", userName);
+  
     if (!userId || !userName) {
       toast.error("❌ Lỗi: Không tìm thấy thông tin người dùng!");
       return;
     }
-
+  
     try {
       const response = await axios.post(`http://localhost:4000/api/comments/${productId}`, {
         userId: userId,
@@ -42,7 +45,7 @@ const Comments = ({ productId }) => {
         text: newComment,
         rating: 5,
       });
-
+  
       toast.success("Thêm bình luận thành công!");
       setComments([...comments, response.data]);
       setNewComment("");
@@ -51,6 +54,7 @@ const Comments = ({ productId }) => {
       toast.error("❌ Lỗi khi thêm bình luận");
     }
   };
+  
 
   const handleDelete = async (commentId) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) return;

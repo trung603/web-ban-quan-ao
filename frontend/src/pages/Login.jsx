@@ -30,7 +30,7 @@ const Login = () => {
           localStorage.setItem('userId', userId);
           localStorage.setItem('userEmail', email);
           localStorage.setItem('referralCode', referralCode);
-          localStorage.setItem("user", name);
+          localStorage.setItem("user", name); 
 
           toast.success('Đăng ký thành công! 🎉');
           navigate('/'); // Điều hướng về trang chính

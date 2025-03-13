@@ -1,17 +1,27 @@
 import mongoose from "mongoose";
 
 const FavoriteSchema = new mongoose.Schema({
-  productId: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
     required: true,
+    ref: "User", // Tham chiếu đến người dùng (nếu có)
   },
-  addedAt: {
-    type: Date,
-    default: Date.now,
+  product: {
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+    name: String,
+    description: String,
+    category: String,
+    subCategory: String,
+    price: Number,
+    sizes: [String],
+    bestseller: Boolean,
+    stock: Number,
+    discount: Number,
+    status: String,
+    image: [String],
   },
+  addedAt: { type: Date, default: Date.now },
 });
 
 const Favorite = mongoose.model("Favorite", FavoriteSchema);
-
 export default Favorite;

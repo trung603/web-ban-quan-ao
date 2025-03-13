@@ -36,7 +36,7 @@ const Navbar = () => {
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
         <NavLink to="/collection" className="flex flex-col items-center gap-1">
-          <p>BỘ SƯU TẬP</p>
+          <p>SẢN PHẨM</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
         <NavLink to="/about" className="flex flex-col items-center gap-1">
@@ -67,6 +67,7 @@ const Navbar = () => {
             <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
               <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
                 <p onClick={() => navigate('/profile')} className="cursor-pointer hover:text-black">Hồ sơ của tôi</p>
+                <p onClick={()=>navigate('favorite')} className="cursor-pointer hover:text-black">Sản phẩm yêu thích</p>
                 <p onClick={()=>navigate('orders')} className="cursor-pointer hover:text-black">Đơn hàng</p>
                 <p onClick={logout} className="cursor-pointer hover:text-black">
                   Đăng xuất

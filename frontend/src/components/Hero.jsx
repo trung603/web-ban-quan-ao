@@ -19,7 +19,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <img className="w-full sm:w-1/2" src={assets.hero_img} alt=""/>
+      <img className="w-full sm:w-1/2" src="https://xuconcept.com/wp-content/uploads/2018/08/chup-anh-quan-ao-thoi-trang.jpg" alt=""/>
     </div>
   );
 };

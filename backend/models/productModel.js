@@ -1,15 +1,24 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-  name: { type: String, require: true },
-  description: { type: String, require: true },
-  price: { type: Number, require: true },
-  image: { type: Array, require: true },
-  category: { type: String, require: true },
-  subCategory: { type: String, require: true },
-  sizes: { type: Array, require: true },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  category: { type: String, required: true },
+  subCategory: { type: String, required: true },
+  price: { type: Number, required: true },
+  sizes: { type: [String], default: [] },
   bestseller: { type: Boolean, default: false },
-  date: { type: Number, require: true },
+  stock: { type: Number, required: true, min: 0 }, // Số lượng trong kho (>= 0)
+  discount: { type: Number, default: 0, min: 0, max: 100 }, // Giảm giá %
+  status: { type: String, enum: ["Còn hàng", "Hết hàng"] }, // Trạng thái
+  image: { type: [String], default: [] }, // Danh sách URL ảnh
+  date: { type: Date, default: Date.now },
+});
+
+// Middleware tự động cập nhật trạng thái dựa trên stock
+productSchema.pre("save", function (next) {
+    this.status = this.stock > 0 ? "Còn hàng" : "Hết hàng";
+    next();
 });
 
 const productModel = mongoose.models.product || mongoose.model("product", productSchema);

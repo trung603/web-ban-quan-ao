@@ -5,7 +5,7 @@ import productModel from "../models/productModel.js";
 const addProduct = async (req, res) => {
     try {
         // Lấy dữ liệu từ request body
-        const { name, description, price, category, subCategory, sizes, bestseller } = req.body;
+        const { name, description, price, category, subCategory, sizes, bestseller, stock, discount, status } = req.body;
 
         // Lấy các file ảnh từ request
         const image1 = req.files.image1 && req.files.image1[0];
@@ -34,6 +34,9 @@ const addProduct = async (req, res) => {
             bestseller: bestseller === "true", // Chuyển đổi bestseller sang kiểu boolean
             sizes: JSON.parse(sizes), // Chuyển đổi chuỗi JSON thành mảng sizes
             image: imagesUrl, // Lưu danh sách URL ảnh
+            stock: Number(stock), // Số lượng trong kho
+            discount: Number(discount), // Giảm giá
+            status: status || "còn hàng", // Trạng thái sản phẩm (mặc định là còn hàng)
             date: Date.now(), // Lưu ngày tạo sản phẩm
         };
 
@@ -51,6 +54,7 @@ const addProduct = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
+
 
 // Hàm lấy danh sách sản phẩm
 const listProducts = async (req, res) => {
@@ -100,6 +104,45 @@ const countProducts = async (req, res) => {
     }
 };
 
+// Hàm cập nhập thông tin sản phẩm
+const updateProduct = async (req, res) => {
+    try {
+        console.log("Received body:", req.body);
+
+        const { id } = req.params; // Lấy ID từ URL params
+        const { name, description, price, category, subCategory, bestseller, stock, discount, status } = req.body;
+
+        console.log("Updating product with ID:", id);
+
+        // Kiểm tra sản phẩm có tồn tại không
+        const product = await productModel.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Sản phẩm không tồn tại" });
+        }
+
+        // Cập nhật sản phẩm (BỎ TRƯỜNG `sizes`)
+        const updatedProduct = await productModel.findByIdAndUpdate(
+            id,
+            {
+                name,
+                description,
+                category,
+                price: Number(price),
+                subCategory,
+                bestseller: bestseller === "true",
+                stock: Number(stock),
+                discount: Number(discount),
+                status: status || "Còn hàng",
+            },
+            { new: true }
+        );
+
+        res.json({ success: true, message: "Cập nhật sản phẩm thành công", product: updatedProduct });
+    } catch (error) {
+        console.error("Update error:", error);
+        res.status(500).json({ success: false, message: "Lỗi server: " + error.message });
+    }
+};
 
   
-export { listProducts, addProduct, removeProduct, singleProduct, countProducts };
+export { listProducts, addProduct, removeProduct, singleProduct, countProducts, updateProduct };
