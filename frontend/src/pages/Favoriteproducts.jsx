@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
+ import Title from "../components/Title";
 
 const FavoriteProducts = () => {
   const [favorites, setFavorites] = useState([]);
@@ -39,7 +40,9 @@ const FavoriteProducts = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-2xl font-semibold mb-4">Danh sách sản phẩm  yêu thích</h2>
+      <div className="text-2xl">
+        <Title text1="SẢN PHẨM" text2="YÊU THÍCH CỦA TÔI" />
+      </div>
 
       {favorites.length === 0 ? (
         <p className="text-gray-500">Bạn chưa có sản phẩm yêu thích nào.</p>
