@@ -67,10 +67,18 @@ const Product = () => {
             <img src={assets.star_dull_icon} className="w-3.5" />
             <p className="pl-2">(122)</p>
           </div>
-          <p className="mt-5 text-3xl font-medium">
+         <p className="mt-5 text-3xl font-medium">
+          {currency}
+          {productData.discount
+            ? Math.round(productData.price * (1 - productData.discount / 100)) // Làm tròn giá đã giảm
+            : Math.round(productData.price)} {/* Làm tròn giá gốc nếu không có giảm giá */}
+        </p>
+        {productData.discount > 0 && (
+          <p className="text-gray-500 line-through text-xl">
             {currency}
-            {productData.price}
+            {Math.round(productData.price)} {/* Làm tròn giá gốc */}
           </p>
+        )}
           <p className="my-5 text-gray-500 md:w-4/5">{productData.description}</p>
           <div className="flex flex-col gap-4 my-8">
             <p>Chọn kích thước</p>
@@ -90,15 +98,27 @@ const Product = () => {
           </div>
           <button
             onClick={() => {
-              if (!size) {
-                alert("Vui lòng chọn kích thước trước khi thêm vào giỏ hàng!");
+              if (productData.stock === 0) {
+                toast.error("Sản phẩm đã hết hàng và không thể thêm vào giỏ hàng!");
                 return;
               }
-              addToCart(productData._id, size);
+
+              if (!size) {
+                toast.warn("Vui lòng chọn kích thước trước khi thêm vào giỏ hàng!");
+                return;
+              }
+
+              // Gọi hàm addToCart nếu sản phẩm còn hàng
+              addToCart(productData._id, size, productData.stock);
             }}
-            className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+            className={`px-8 py-3 text-sm text-white ${
+              productData.stock === 0
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-black active:bg-gray-700"
+            }`}
+            disabled={productData.stock === 0}
           >
-            ADD TO CART
+            {productData.stock === 0 ? "Hết hàng" : "Thêm sản phẩm vào giỏ hàng"}
           </button>
           <hr className="mt-8 sm:w-4/5" />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">

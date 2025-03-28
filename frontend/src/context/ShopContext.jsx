@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import axiosClient from '../apis/axiosClient'
 
-export const ShopContext = createContext();
+export const ShopContext = createContext(); // Tạo context Shopcontext
 
 const ShopContextProvider = (props) => {
   const currency = "$";
@@ -13,7 +13,7 @@ const ShopContextProvider = (props) => {
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
-  // Lấy giỏ hàng từ localStorage khi khởi động
+  // Lấy giỏ hàng từ localStorage khi khởi động nếu không có DL thì rỗng
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cartItems");
     return savedCart ? JSON.parse(savedCart) : {};
@@ -23,6 +23,7 @@ const ShopContextProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
 
+  // Lấy dữ liệu giỏ hàng từ backend
 const getProductInCart = async()=> {
   if(!token) return 
   const userId = localStorage.getItem("userId");
@@ -44,20 +45,27 @@ const getProductInCart = async()=> {
 }
   
   // 🛍️ Thêm sản phẩm vào giỏ hàng
-  const addToCart = async (itemId, size) => {
-    if (!size) {
-      toast.error("Vui lòng chọn kích thước sản phẩm!");
+  const addToCart = async (itemId, size, stock) => {
+    if (stock === 0) {
+      toast.error("Sản phẩm đã hết hàng và không thể thêm vào giỏ hàng!");
       return;
     }
-
+  
+    if (!size) {
+      toast.warn("Vui lòng chọn kích thước trước khi thêm vào giỏ hàng!");
+      return;
+    }
+  
     setCartItems((prev) => {
       let newCart = { ...prev };
       if (!newCart[itemId]) newCart[itemId] = {};
-      newCart[itemId][size] = (newCart[itemId][size] || 0) + 1;
+      newCart[itemId][size] = {
+        quantity: (newCart[itemId][size]?.quantity || 0) + 1,
+      };
       localStorage.setItem("cartItems", JSON.stringify(newCart));
       return newCart;
     });
-
+  
     if (token) {
       try {
         const userId = localStorage.getItem("userId");
@@ -65,12 +73,12 @@ const getProductInCart = async()=> {
           toast.error("Lỗi: Không tìm thấy userId!");
           return;
         }
-
+  
         const cartItem = { userId, itemId, size, quantity: 1 };
         const response = await axios.post(`${backendUrl}/api/cart/add`, cartItem, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+  
         if (response.data.success) {
           toast.success("Thêm vào giỏ hàng thành công!");
         } else {
@@ -81,7 +89,8 @@ const getProductInCart = async()=> {
       }
     }
   };
-
+  
+  
   // 📌 Cập nhật số lượng sản phẩm trong giỏ hàng
   const updateQuantity = async (itemId, size, quantity) => {
     if (quantity < 0) {

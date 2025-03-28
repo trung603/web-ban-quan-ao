@@ -202,4 +202,56 @@ const getTotalRevenue = async (req, res) => {
     }
 };
 
-export { verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue };
+// 🛒 Thanh toán và cập nhật số lượng sản phẩm
+const checkout = async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "ID không hợp lệ!" });
+        }
+
+        const cart = await Cart.findOne({ userId }).populate("items.itemId");
+
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ success: false, message: "Giỏ hàng trống!" });
+        }
+
+        // Kiểm tra tồn kho
+        for (let item of cart.items) {
+            let product = await productModel.findById(item.itemId);
+            if (!product || product.stock < item.quantity) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: `Sản phẩm ${product?.name || "không xác định"} không đủ hàng!` 
+                });
+            }
+        }
+
+        // Cập nhật số lượng tồn kho
+        for (let item of cart.items) {
+            await productModel.findByIdAndUpdate(item.itemId, {
+                $inc: { stock: -item.quantity }
+            });
+        }
+
+        // Lấy danh sách sản phẩm mới sau khi cập nhật
+        const updatedProducts = await productModel.find();
+
+        // Xóa giỏ hàng sau khi thanh toán
+        await Cart.findOneAndDelete({ userId });
+
+        res.json({ 
+            success: true, 
+            message: "Thanh toán thành công!", 
+            products: updatedProducts  // Trả về danh sách sản phẩm mới
+        });
+
+    } catch (error) {
+        console.error("🔥 Lỗi khi thanh toán:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi thanh toán!", error });
+    }
+};
+
+
+export { verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout };

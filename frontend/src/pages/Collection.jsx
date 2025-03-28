@@ -12,7 +12,7 @@ const Collection = () => {
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState("relevent");
 
-  // Hàm toggle chọn category
+  // Hàm toggle chọn category loại danh mục
   const toggleCategory = (e) => {
     if (category.includes(e.target.value)) {
       setCategory((prev) => prev.filter((item) => item !== e.target.value));
@@ -21,7 +21,7 @@ const Collection = () => {
     }
   };
 
-  // Hàm toggle chọn subCategory
+  // Hàm toggle chọn subCategory loại sản phẩm
   const toggleSubCategory = (e) => {
     if (subCategory.includes(e.target.value)) {
       setSubCategory((prev) => prev.filter((item) => item !== e.target.value));
@@ -239,7 +239,7 @@ const Collection = () => {
               price={item.price}
               image={item.image}
               stock={item.stock}       
-              
+              isOutOfStock={item.stock === 0}
               discount={item.discount}
               showStock={true}
             />

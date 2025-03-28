@@ -79,9 +79,7 @@ const Profile = () => {
     }
   };
   
-  
-
-// upload ảnh
+// upload ảnh đại diện
 const handleAvatarUpload = async (event) => {
   const file = event.target.files[0];
   if (!file) return;

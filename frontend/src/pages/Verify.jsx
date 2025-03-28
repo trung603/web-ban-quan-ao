@@ -29,7 +29,7 @@ const Verify = () => {
                 await axios.delete(`${backendUrl}/api/cart/${userId}`);
     
                 // Xóa giỏ hàng trên frontend
-                setCartItems([]); // Chuyển thành mảng rỗng thay vì {}
+                setCartItems([]);
                 localStorage.setItem("orderCompleted", "true");
                 localStorage.removeItem("cartItems"); 
     
