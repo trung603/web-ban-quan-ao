@@ -26,6 +26,14 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password, referralCode } = req.body;
 
+    // Danh sách email admin không cho đăng ký
+    const adminEmails = ["admin@example.com", "superadmin@example.com"];
+
+    // Chặn email admin không được đăng ký
+    if (adminEmails.includes(email)) {
+      return res.status(403).json({ success: false, message: "Không thể đăng ký bằng tài khoản admin!" });
+    }
+
     // Kiểm tra email đã tồn tại chưa
     const exists = await userModel.findOne({ email });
     if (exists) {
@@ -44,29 +52,26 @@ const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Tạo người dùng mới
+    // Tạo người dùng mới (chỉ user, không phải admin)
     const newUser = new userModel({
       name,
       email,
       password: hashedPassword,
-      referralCode: await generateUniqueReferralCode(), // Tạo mã giới thiệu mới
+      role: "user", // Mặc định đăng ký là user
+      referralCode: await generateUniqueReferralCode(),
     });
 
     // Kiểm tra mã giới thiệu
     if (referralCode) {
       const referrer = await userModel.findOne({ referralCode });
       if (referrer && referrer._id.toString() !== newUser._id.toString()) {
-        // Cộng điểm thưởng cho người giới thiệu
         await userModel.findByIdAndUpdate(referrer._id, { $inc: { points: 10 } });
-
-        // Lưu thông tin giới thiệu vào bảng Referral
         await referralModel.create({
           referrerId: referrer._id,
           referredUserId: newUser._id,
           referralCode,
         });
       }
-      
     }
 
     // Lưu người dùng mới vào database
@@ -88,6 +93,7 @@ const registerUser = async (req, res) => {
     res.status(500).json({ success: false, message: "Lỗi server." });
   }
 };
+
 
 // // // Hàm xử lý logic nhập mã giới thiệu
 // const redeemReferral = async (req, res) => {

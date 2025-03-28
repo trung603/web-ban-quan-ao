@@ -48,6 +48,11 @@ const Sidebar = ({ token }) => {
           text="Danh sách đơn hàng"
         />
         <SidebarItem
+          to="/renenue"
+          icon={<FaShoppingCart />}
+          text="Lợi nhuận"
+        />
+        <SidebarItem
           to="/adminuser"
           icon={<FaUsers />}
           text="Danh sách người dùng"

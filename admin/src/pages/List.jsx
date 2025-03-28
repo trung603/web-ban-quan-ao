@@ -53,35 +53,35 @@ const List = ({ token }) => {
   // Cập nhật giá trị khi chỉnh sửa
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "size") {
       setEditData({ ...editData, size: value.split(",") }); // Chuyển chuỗi thành mảng
     } else {
       setEditData({ ...editData, [name]: value });
     }
-  };  
+  };
 
   // Lưu chỉnh sửa
   const saveEdit = async () => {
     try {
-        const response = await axios.put(
-            `${backendUrl}/api/product/update/${editingId}`,  // Gửi id trong URL
-            editData,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+      const response = await axios.put(
+        `${backendUrl}/api/product/update/${editingId}`, // Gửi id trong URL
+        editData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-        if (response.data.success) {
-            toast.success("Cập nhật sản phẩm thành công");
-            setEditingId(null);
-            fetchList(); // Cập nhật danh sách sản phẩm
-        } else {
-            toast.error(response.data.message);
-        }
+      if (response.data.success) {
+        toast.success("Cập nhật sản phẩm thành công");
+        setEditingId(null);
+        fetchList(); // Cập nhật danh sách sản phẩm
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-        console.log(error);
-        toast.error("Có lỗi xảy ra khi cập nhật sản phẩm");
+      console.log(error);
+      toast.error("Có lỗi xảy ra khi cập nhật sản phẩm");
     }
-};
+  };
 
   useEffect(() => {
     fetchList();

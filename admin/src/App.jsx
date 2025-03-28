@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminUserList from "./pages/AdminUserList";
 import NewsletterList from "./pages/Newsletter";
 import AdminComments from "./pages/AdminComment";
+import Revenue from "./pages/Revenue";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = '$';
@@ -42,6 +43,7 @@ const App = () => {
                 <Route path="/add" element={<Add token={token} />} />
                 <Route path="/list" element={<List token={token} />} />
                 <Route path="/order" element={<Order token={token} />} />
+                <Route path="/renenue" element={< Revenue token={token} />} />
                 <Route path="/adminuser" element={ <AdminUserList token={token}/>}/>
                 <Route path="/newsletter" element={ <NewsletterList token={token}/>}/>
                 <Route path="/admincomment" element={ <AdminComments token={token}/>}/>

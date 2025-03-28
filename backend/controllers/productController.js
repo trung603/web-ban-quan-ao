@@ -5,7 +5,7 @@ import productModel from "../models/productModel.js";
 const addProduct = async (req, res) => {
     try {
         // Lấy dữ liệu từ request body
-        const { name, description, price, category, subCategory, sizes, bestseller, stock, discount, status } = req.body;
+        const { name, description, price, importPrice, category, subCategory, sizes, bestseller, stock, discount, status } = req.body;
 
         // Lấy các file ảnh từ request
         const image1 = req.files.image1 && req.files.image1[0];
@@ -29,7 +29,8 @@ const addProduct = async (req, res) => {
             name,
             description,
             category,
-            price: Number(price), // Chuyển đổi giá sang kiểu số
+            price: Number(price),
+            importPrice: Number(importPrice), // Chuyển đổi giá sang kiểu số
             subCategory,
             bestseller: bestseller === "true", // Chuyển đổi bestseller sang kiểu boolean
             sizes: JSON.parse(sizes), // Chuyển đổi chuỗi JSON thành mảng sizes
@@ -144,5 +145,19 @@ const updateProduct = async (req, res) => {
     }
 };
 
-  
+// Tính tổng doanh thu 
+const getRevenue = async (req, res) => {
+    try {
+        const products = await productModel.find();
+        
+        let totalRevenue = products.reduce((acc, product) => {
+            let profitPerProduct = (product.price - product.importPrice) * product.sold;
+            return acc + profitPerProduct;
+        }, 0);
+
+        res.json({ success: true, revenue: totalRevenue });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+};
 export { listProducts, addProduct, removeProduct, singleProduct, countProducts, updateProduct };

@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subCategory: { type: String, required: true },
   price: { type: Number, required: true },
+  importPrice:{ type: Number, required: true } ,
   sizes: { type: [String], default: [] },
   bestseller: { type: Boolean, default: false },
   stock: { type: Number, required: true, min: 0 }, // Số lượng trong kho (>= 0)

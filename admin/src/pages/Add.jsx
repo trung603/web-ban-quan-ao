@@ -9,6 +9,7 @@ const Add = ({ token }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [importPrice, setImportPrice] = useState("");
   const [category, setCategory] = useState("Men");
   const [subCategory, setSubCategory] = useState("Topwear");
   const [bestseller, setBestseller] = useState(false);
@@ -25,6 +26,7 @@ const Add = ({ token }) => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("price", price);
+      formData.append("importPrice", importPrice);
       formData.append("category", category);
       formData.append("subCategory", subCategory);
       formData.append("bestseller", bestseller);
@@ -45,6 +47,7 @@ const Add = ({ token }) => {
         setName('');
         setDescription('');
         setPrice('');
+        setImportPrice('');
         setStock('');
         setDiscount('');
         setStatus('Còn hàng');
@@ -130,6 +133,17 @@ const Add = ({ token }) => {
       <div>
         <p className='mb-2'>Số lượng trong kho</p>
         <input onChange={(e) => setStock(e.target.value)} value={stock} className='w-full px-3 py-2' type="Number" placeholder='Nhập số lượng' required />
+      </div>
+      <div>
+        <p className='mb-2'>Giá nhập</p>
+        <input 
+          onChange={(e) => setImportPrice(e.target.value)} 
+          value={importPrice} 
+          className='w-full px-3 py-2' 
+          type="Number" 
+          placeholder='Nhập giá nhập' 
+          required 
+        />
       </div>
        {/* Chọn kích cỡ */}
        <div>

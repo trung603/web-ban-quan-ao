@@ -1,5 +1,5 @@
 import express from 'express'
-import { allOrders, countOrders, getTotalRevenue, placeOrder, placeOrderStripe, updateStatus, userOrders, verifyStripe } from '../controllers/orderController.js'
+import { allOrders, countOrders, getTotalRevenue, placeOrder, placeOrderStripe, updateStatus, userOrders, verifyStripe, getTotalImportCost  } from '../controllers/orderController.js'
 import adminAuth from '../middleware/adminAuth.js'
 import authUser from '../middleware/auth.js'
 
@@ -23,5 +23,7 @@ orderRouter.post('/verifyStripe', authUser, verifyStripe)
 
 orderRouter.get('/count', countOrders)
 orderRouter.get('/total-revenue', getTotalRevenue)
+// Route lấy tổng giá nhập
+orderRouter.get("/total-import-cost", getTotalImportCost);
 
 export default orderRouter;

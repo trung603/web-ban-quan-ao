@@ -253,5 +253,32 @@ const checkout = async (req, res) => {
     }
 };
 
+// Hàm tính tổng giá nhập của sản phẩm
+const getTotalImportCost = async (req, res) => {
+    try {
+        const totalImportCost = await orderModel.aggregate([
+            { $unwind: "$products" }, // Tách từng sản phẩm trong đơn hàng
+            {
+                $group: {
+                    _id: null,
+                    totalImportCost: { 
+                        $sum: { $multiply: ["$products.importPrice", "$products.quantity"] }
+                    }
+                }
+            }
+        ]);
 
-export { verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout };
+        if (!totalImportCost.length) {
+            return res.status(404).json({ success: false, message: "Không có dữ liệu chi phí nhập hàng" });
+        }
+
+        return res.json({ success: true, totalImportCost: totalImportCost[0].totalImportCost });
+
+    } catch (error) {
+        console.error("Lỗi khi lấy tổng chi phí nhập hàng:", error);
+        return res.status(500).json({ success: false, message: "Lỗi server" });
+    }
+};
+
+  
+export { verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout, getTotalImportCost };
