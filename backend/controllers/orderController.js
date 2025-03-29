@@ -1,6 +1,7 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import cartModel from "../models/cartModel.js";
+import  productModel from '../models/productModel.js'
 import Stripe from "stripe";
 import mongoose from "mongoose";
 
@@ -202,6 +203,56 @@ const getTotalRevenue = async (req, res) => {
     }
 };
 
+// Tổng giá nhập hàng
+const getTotalImportCost = async (req, res) => {
+    try {
+        const totalImportCost = await productModel.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalImportCost: {
+                        $sum: { $multiply: ["$importPrice", "$stock"] } 
+                    }
+                }
+            }
+        ]);
+
+        const total = totalImportCost.length > 0 ? totalImportCost[0].totalImportCost : 0;
+
+        res.json({ success: true, totalImportCost: total });
+    } catch (error) {
+        console.error("Lỗi khi tính tổng giá nhập hàng:", error);
+        res.status(500).json({ success: false, message: "Lỗi hệ thống" });
+    }
+};
+
+
+
+// lợi nhuận
+const getProfit = async (req, res) => {
+    try {
+        // Lấy tổng doanh thu
+        const revenueResult = await orderModel.aggregate([
+            { $group: { _id: null, total: { $sum: "$amount" } } }
+        ]);
+        const totalRevenue = revenueResult[0]?.total || 0;
+
+        // Lấy tổng giá nhập hàng
+        const importCostResult = await productModel.aggregate([
+            { $group: { _id: null, total: { $sum: { $multiply: ["$importPrice", "$quantity"] } } } }
+        ]);
+        const totalImportCost = importCostResult[0]?.total || 0;
+
+        // Tính lợi nhuận
+        const profit = totalRevenue - totalImportCost;
+
+        res.json({ success: true, profit });
+    } catch (error) {
+        console.error("Lỗi khi tính lợi nhuận:", error);
+        res.status(500).json({ success: false, message: "Lỗi hệ thống!" });
+    }
+};
+
 // 🛒 Thanh toán và cập nhật số lượng sản phẩm
 const checkout = async (req, res) => {
     try {
@@ -211,7 +262,7 @@ const checkout = async (req, res) => {
             return res.status(400).json({ success: false, message: "ID không hợp lệ!" });
         }
 
-        const cart = await Cart.findOne({ userId }).populate("items.itemId");
+        const cart = await cartModel.findOne({ userId }).populate("items.itemId");
 
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({ success: false, message: "Giỏ hàng trống!" });
@@ -239,7 +290,7 @@ const checkout = async (req, res) => {
         const updatedProducts = await productModel.find();
 
         // Xóa giỏ hàng sau khi thanh toán
-        await Cart.findOneAndDelete({ userId });
+        await cart.findOneAndDelete({ userId });
 
         res.json({ 
             success: true, 
@@ -254,31 +305,26 @@ const checkout = async (req, res) => {
 };
 
 // Hàm tính tổng giá nhập của sản phẩm
-const getTotalImportCost = async (req, res) => {
+const getRevenueByDay = async (req, res) => {
     try {
-        const totalImportCost = await orderModel.aggregate([
-            { $unwind: "$products" }, // Tách từng sản phẩm trong đơn hàng
+        const revenueData = await orderModel.aggregate([
+            {
+                $match: { amount: { $gt: 0 }, createdAt: { $exists: true } } // Kiểm tra amount và createdAt
+            },
             {
                 $group: {
-                    _id: null,
-                    totalImportCost: { 
-                        $sum: { $multiply: ["$products.importPrice", "$products.quantity"] }
-                    }
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    totalRevenue: { $sum: "$amount" }
                 }
-            }
+            },
+            { $sort: { _id: 1 } }
         ]);
 
-        if (!totalImportCost.length) {
-            return res.status(404).json({ success: false, message: "Không có dữ liệu chi phí nhập hàng" });
-        }
-
-        return res.json({ success: true, totalImportCost: totalImportCost[0].totalImportCost });
-
+        res.json({ success: true, revenueData });
     } catch (error) {
-        console.error("Lỗi khi lấy tổng chi phí nhập hàng:", error);
-        return res.status(500).json({ success: false, message: "Lỗi server" });
+        console.error("🔥 Lỗi khi lấy doanh thu theo ngày:", error);
+        res.status(500).json({ success: false, message: "Lỗi hệ thống!" });
     }
 };
 
-  
-export { verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout, getTotalImportCost };
+export { getProfit, verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout, getRevenueByDay, getTotalImportCost };

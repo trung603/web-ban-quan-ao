@@ -47,11 +47,7 @@ const Sidebar = ({ token }) => {
           icon={<FaShoppingCart />}
           text="Danh sách đơn hàng"
         />
-        <SidebarItem
-          to="/renenue"
-          icon={<FaShoppingCart />}
-          text="Lợi nhuận"
-        />
+        
         <SidebarItem
           to="/adminuser"
           icon={<FaUsers />}
@@ -60,7 +56,7 @@ const Sidebar = ({ token }) => {
         <SidebarItem
           to="/newsletter"
           icon={<FaUsers />}
-          text="Khách vãng lai"
+          text="Tài khoản đăng ký nhận ưu đãi"
         />
         <SidebarItem
           to="/admincomment"
