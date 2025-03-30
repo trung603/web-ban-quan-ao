@@ -226,9 +226,57 @@ const getTotalImportCost = async (req, res) => {
     }
 };
 
+// hàm tính tổng giá nhập của một đơn hàng
+const getImportCostByOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
 
+        if (!mongoose.Types.ObjectId.isValid(orderId)) {
+            return res.status(400).json({ success: false, message: "ID đơn hàng không hợp lệ" });
+        }
 
-// lợi nhuận
+        const orderImportCost = await orderModel.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(orderId) } }, 
+            { $unwind: "$items" },
+            {
+                $addFields: {
+                    "items.productId": { $toObjectId: "$items.productId" } // Ép kiểu String -> ObjectId
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "items.productId",
+                    foreignField: "_id",
+                    as: "productInfo"
+                }
+            },
+            { $unwind: { path: "$productInfo", preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: "$_id",
+                    totalImportCost: { 
+                        $sum: { 
+                            $multiply: [
+                                { $ifNull: ["$productInfo.importPrice", 0] }, 
+                                { $ifNull: ["$items.quantity", 0] }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]);
+
+        const totalImportCost = orderImportCost.length > 0 ? orderImportCost[0].totalImportCost : 0;
+
+        res.json({ success: true, totalImportCost });
+    } catch (error) {
+        console.error("Lỗi khi tính tổng giá nhập đơn hàng:", error);
+        res.status(500).json({ success: false, message: "Lỗi hệ thống!" });
+    }
+};
+
+// lợi nhuận dòng
 const getProfit = async (req, res) => {
     try {
         // Lấy tổng doanh thu
@@ -327,4 +375,4 @@ const getRevenueByDay = async (req, res) => {
     }
 };
 
-export { getProfit, verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout, getRevenueByDay, getTotalImportCost };
+export { getProfit, verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, updateStatus, countOrders, getTotalRevenue, checkout, getRevenueByDay, getTotalImportCost,getImportCostByOrder };

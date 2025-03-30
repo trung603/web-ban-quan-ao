@@ -1,5 +1,5 @@
 import express from 'express'
-import { allOrders, countOrders, getTotalRevenue, placeOrder, placeOrderStripe, updateStatus, userOrders, verifyStripe, getRevenueByDay ,getTotalImportCost, getProfit  } from '../controllers/orderController.js'
+import { allOrders, countOrders, getTotalRevenue, placeOrder, placeOrderStripe, updateStatus, userOrders, verifyStripe, getRevenueByDay ,getTotalImportCost, getProfit, getImportCostByOrder  } from '../controllers/orderController.js'
 import adminAuth from '../middleware/adminAuth.js'
 import authUser from '../middleware/auth.js'
 
@@ -29,4 +29,6 @@ orderRouter.get("/total-import-cost", getTotalImportCost);
 orderRouter.get("/revenue-by-day", getRevenueByDay);
 
 orderRouter.get("/profit", getProfit);
+
+orderRouter.get("/import-cost/:orderId", getImportCostByOrder);
 export default orderRouter;
