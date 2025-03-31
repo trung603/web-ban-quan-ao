@@ -107,7 +107,7 @@ const Revenue = ({ token, totalRevenue = 0 }) => {
 
       {/* Danh sách đơn hàng và tổng giá nhập */}
 <div className="mt-6">
-  <h4 className="text-lg font-bold">📦 Tổng lợi nhuận từ đơn hàng</h4>
+  <h4 className="text-lg font-bold">📦 Tổng doanh thu từ đơn hàng</h4>
 
   <div className="bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between">
     <span className="text-gray-600">Tổng giá nhập của các đơn hàng:</span>

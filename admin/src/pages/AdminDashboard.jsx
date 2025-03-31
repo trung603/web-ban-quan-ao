@@ -66,29 +66,27 @@ const AdminDashboard = ({ token }) => {
           // 🗓 Lấy danh sách 7 ngày gần nhất
           const daysOfWeek = [...Array(7)].map((_, i) => {
             const date = new Date();
-            date.setDate(date.getDate() - i);
+            date.setDate(date.getDate() - (6 - i)); // Đảo ngược thứ tự để ngày mới nhất ở cuối
             return {
               dateString: date.toISOString().split("T")[0], // Format YYYY-MM-DD
               dayOfWeek: date.toLocaleDateString("vi-VN", { weekday: "long" }), // "Thứ 2", "Thứ 3"...
             };
-          }).reverse();
+          });
     
           // 🔄 Map dữ liệu API vào danh sách 7 ngày, nếu thiếu thì set totalRevenue = 0
           const formattedData = daysOfWeek.map(day => {
             const found = revenueData.find(item => item._id === day.dateString);
             return {
-              name: day.dayOfWeek, // Hiển thị "Thứ 2", "Thứ 3", ...
-              totalRevenue: found ? found.totalRevenue : 0, // Nếu không có, set về 0
+              name: `${day.dayOfWeek}|${day.dateString}`, // "Thứ Hai|2025-03-31"
+              totalRevenue: found ? found.totalRevenue : 0,
             };
           });
-    
           setDailyRevenue(formattedData);
         }
       } catch (error) {
         console.error("Lỗi khi lấy doanh thu theo ngày:", error);
       }
     };
-    
     
     if (token) {
       fetchProductCount();
@@ -153,7 +151,7 @@ const AdminDashboard = ({ token }) => {
       </div>
       {/* Biểu đồ tổng doanh thu */}
       <div className="mt-6 bg-white p-6 shadow-md rounded-lg">
-        <h4 className="text-lg font-semibold mb-4">📈 Biểu đồ Tổng Doanh Thu</h4>
+        <h4 className="text-lg font-semibold mb-4">📈 Biểu đồ Doanh Thu</h4>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={totalRevenueData}>
             <XAxis dataKey="name" />
@@ -170,7 +168,27 @@ const AdminDashboard = ({ token }) => {
         <ResponsiveContainer width="100%" height={400}>
         <BarChart data={dailyRevenue}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />  
+          <XAxis
+  dataKey="name"
+  interval={0}
+  tick={({ x, y, payload }) => {
+    const [dayOfWeek, date] = payload.value.split("|"); // Chia "Thứ Hai|2025-03-31" thành 2 phần
+    return (
+      <g transform={`translate(${x},${y})`}>
+        {/* Hiển thị Thứ (trên) */}
+        <text x={0} y={0} dy={8} textAnchor="middle" fill="#666" fontSize={12}>
+          {dayOfWeek}
+        </text>
+        {/* Hiển thị Ngày (dưới) */}
+        <text x={0} y={10} dy={10} textAnchor="middle" fill="#666" fontSize={12}>
+          {date}
+        </text>
+      </g>
+    );
+  }}
+/>
+
+  
           <YAxis />
           <Tooltip />
           <Bar dataKey="totalRevenue" fill="#FF9800" />  
