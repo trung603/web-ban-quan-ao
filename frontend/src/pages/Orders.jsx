@@ -32,7 +32,7 @@ const Orders = () => {
 
         response.data.orders.forEach((order) => {
           order.items.forEach((item) => {
-            console.log("🛒 Item từ API:", item);
+            // console.log("🛒 Item từ API:", item);
             allOrdersItem.push({
               ...item,
               image: item.image || [],
@@ -46,7 +46,7 @@ const Orders = () => {
           });
         });
 
-        console.log("✅ Danh sách sản phẩm sau xử lý:", allOrdersItem);
+        // console.log("✅ Danh sách sản phẩm sau xử lý:", allOrdersItem);
         setOrderData(allOrdersItem.reverse());
       } else {
         console.warn("⚠ Không có đơn hàng.");

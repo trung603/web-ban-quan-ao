@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 // Biến toàn cục
 const currency = "USD"; // Đơn vị tiền tệ
-const deliveryCharge = 10; // Phí vận chuyển
+const deliveryCharge = 10; 
 
 // Khởi tạo cổng thanh toán Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -15,6 +15,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Đặt hàng bằng phương thức Thanh toán khi nhận hàng (COD)
 const placeOrder = async (req, res) => {
     try {
+        debugger
         const { userId, items, amount, address } = req.body;
 
         // Kiểm tra userId hợp lệ
@@ -132,7 +133,7 @@ const verifyStripe = async (req, res) => {
         console.error("Lỗi khi xác minh thanh toán:", error);
         res.status(500).json({ success: false, message: "Lỗi hệ thống" });
     }
-};
+}; 
 
 // Lấy tất cả đơn hàng cho bảng quản trị
 const allOrders = async (req, res) => {
@@ -329,6 +330,7 @@ const checkout = async (req, res) => {
 
         // Cập nhật số lượng tồn kho
         for (let item of cart.items) {
+            debugger
             await productModel.findByIdAndUpdate(item.itemId, {
                 $inc: { stock: -item.quantity }
             });

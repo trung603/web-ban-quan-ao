@@ -6,16 +6,16 @@ import CartTotal from "../components/CartTotal";
 
 const Cart = () => {
   // Lấy dữ liệu từ context
-  const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
-console.log(cartItems);
-const getProductPrice = (itemId) => {
-  const product = products.find((p) => p._id === itemId);
-  if (!product) return 0;
-  return product.discount
-    ? Math.round(product.price * (1 - product.discount / 100)) // Giá sau giảm
-    : Math.round(product.price); // Giá gốc
-};
- return (
+  const { products, currency, cartItems, updateQuantity, navigate } =useContext(ShopContext);
+  console.log(cartItems);
+  const getProductPrice = (itemId) => {
+    const product = products.find((p) => p._id === itemId);
+    if (!product) return 0;
+    return product.discount
+      ? Math.round(product.price * (1 - product.discount / 100)) // Giá sau giảm
+      : Math.round(product.price); // Giá gốc
+  };
+  return (
     <div className="border-t pt-14">
       <div className="text-2xl mb-3">
         <Title text1={"YOUR"} text2={"CART"} />
@@ -34,17 +34,15 @@ const getProductPrice = (itemId) => {
                   src={item.image[0]}
                   alt="Sản phẩm"
                 />
-                
+
                 <div>
                   {/* Hiển thị tên sản phẩm */}
-                  <p className="text-xs sm:text-lg font-medium">
-                    {item.name}
-                  </p>
+                  <p className="text-xs sm:text-lg font-medium">{item.name}</p>
                   <div className="flex items-center gap-5 mt-2">
                     {/* Hiển thị giá sản phẩm */}
                     <p>
-  {currency} {getProductPrice(item._id)}
-</p>
+                      {currency} {getProductPrice(item._id)}
+                    </p>
                     {/* Hiển thị kích thước sản phẩm */}
                     <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">
                       {item.size}

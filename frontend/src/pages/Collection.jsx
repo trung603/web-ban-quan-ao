@@ -11,6 +11,7 @@ const Collection = () => {
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState("relevent");
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
 
   // Hàm toggle chọn category loại danh mục
   const toggleCategory = (e) => {
@@ -48,6 +49,13 @@ const Collection = () => {
         subCategory.includes(item.subCategory)
       );
     }
+    
+  //   if (priceRange.length === 2) {
+  //     const [minPrice, maxPrice] = priceRange;
+  //     productsCopy = productsCopy.filter((item) =>
+  //         item.price >= minPrice && item.price <= maxPrice
+  //     );
+  // }
     setFilterProducts(productsCopy);
   };
 

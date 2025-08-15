@@ -30,15 +30,15 @@ const addProduct = async (req, res) => {
             description,
             category,
             price: Number(price),
-            importPrice: Number(importPrice), // Chuyển đổi giá sang kiểu số
+            importPrice: Number(importPrice),
             subCategory,
-            bestseller: bestseller === "true", // Chuyển đổi bestseller sang kiểu boolean
-            sizes: JSON.parse(sizes), // Chuyển đổi chuỗi JSON thành mảng sizes
-            image: imagesUrl, // Lưu danh sách URL ảnh
-            stock: Number(stock), // Số lượng trong kho
-            discount: Number(discount), // Giảm giá
-            status: status || "còn hàng", // Trạng thái sản phẩm (mặc định là còn hàng)
-            date: Date.now(), // Lưu ngày tạo sản phẩm
+            bestseller: bestseller === "true",
+            sizes: JSON.parse(sizes), 
+            image: imagesUrl, 
+            stock: Number(stock), 
+            discount: Number(discount), 
+            status: status || "còn hàng", 
+            date: Date.now(), 
         };
 
         console.log("sizes:", sizes);
@@ -145,19 +145,5 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// Tính tổng doanh thu 
-const getRevenue = async (req, res) => {
-    try {
-        const products = await productModel.find();
-        
-        let totalRevenue = products.reduce((acc, product) => {
-            let profitPerProduct = (product.price - product.importPrice) * product.sold;
-            return acc + profitPerProduct;
-        }, 0);
 
-        res.json({ success: true, revenue: totalRevenue });
-    } catch (error) {
-        res.json({ success: false, message: error.message });
-    }
-};
 export { listProducts, addProduct, removeProduct, singleProduct, countProducts, updateProduct };
